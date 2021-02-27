@@ -234,7 +234,7 @@ class Home extends StatelessWidget {
             child: FlatButton(
               color: ColorBase.kPrimaryColor,
               onPressed: () {
-                BlocProvider.of<TruthOrDareBloc>(context).add(GetTruth());
+                BlocProvider.of<TruthOrDareBloc>(context).add(GetTruth(selectedLevel:state is TruthLoaded? state.selectedLevel:-1));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -266,7 +266,7 @@ class Home extends StatelessWidget {
             child: OutlineButton(
               borderSide: BorderSide(color: ColorBase.kPrimaryColor),
               onPressed: () {
-                BlocProvider.of<TruthOrDareBloc>(context).add(GetDare());
+                BlocProvider.of<TruthOrDareBloc>(context).add(GetDare(selectedLevel:state is DareLoaded? state.selectedLevel:-1));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
