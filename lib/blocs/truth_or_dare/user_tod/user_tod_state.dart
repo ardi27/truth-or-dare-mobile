@@ -10,6 +10,7 @@ class UserTodInitial extends UserTodState {
 
 }
 class UserTodLoading extends UserTodState{}
+class TodDeleted extends UserTodState{}
 class UserTodFailure extends UserTodState{
   final String message;
 

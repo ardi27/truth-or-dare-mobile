@@ -50,7 +50,7 @@ class TruthOrDareBloc extends Bloc<TruthOrDareEvent, TruthOrDareState> {
     yield TodLoading();
     try{
       int statusCode= await truthRepository.submitTod(type: event.type,value: event.value,level: event.level);
-      yield TodDeleted();
+
       if(statusCode==201){
         yield TodAdded();
       }else{

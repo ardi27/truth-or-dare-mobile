@@ -15,6 +15,7 @@ class Register extends StatelessWidget {
   TextEditingController nama = TextEditingController();
   TextEditingController email = TextEditingController();
   GlobalKey<FormState> _form = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,11 +45,13 @@ class Register extends StatelessWidget {
                 ),
               );
             } else if (state is RegisterSuccess) {
-              DialogTextOnly(title: "Registrasi Berhasil",description: "Silahkan login dengan akun yang sudah didaftarkan", buttonText: "Login", onOkPressed: (){
-                Navigator.pushNamedAndRemoveUntil(
-                    context, loginRoute, (route) => route.isCurrent);
-              });
-
+              showDialog(
+                context: (context),
+                builder: (context)=>DialogTextOnly(title: "Registrasi Berhasil",description: "Silahkan login dengan akun yang sudah didaftarkan", buttonText: "Login", onOkPressed: (){
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, loginRoute, (route) => route.isCurrent);
+                })
+              );
             } else if (state is LoginFailure) {
               Scaffold.of(context).showSnackBar(
                 SnackBar(
@@ -72,7 +75,13 @@ class Register extends StatelessWidget {
               );
             }
           },
-          child: BuildForm(form: _form, username: username, email: email, nama: nama, password: password, confirmPassword: confirmPassword),
+          child: BuildForm(
+              form: _form,
+              username: username,
+              email: email,
+              nama: nama,
+              password: password,
+              confirmPassword: confirmPassword),
         ),
       ),
     );
@@ -88,7 +97,8 @@ class BuildForm extends StatefulWidget {
     @required this.nama,
     @required this.password,
     @required this.confirmPassword,
-  }) : _form = form, super(key: key);
+  })  : _form = form,
+        super(key: key);
 
   final GlobalKey<FormState> _form;
   final TextEditingController username;
@@ -103,12 +113,13 @@ class BuildForm extends StatefulWidget {
 
 class _BuildFormState extends State<BuildForm> {
   LoginBloc _loginBloc;
+
   @override
   void initState() {
-
     super.initState();
-    _loginBloc=BlocProvider.of<LoginBloc>(context);
+    _loginBloc = BlocProvider.of<LoginBloc>(context);
   }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

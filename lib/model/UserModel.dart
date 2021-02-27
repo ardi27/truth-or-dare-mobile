@@ -10,6 +10,30 @@ String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
   UserModel({
+    this.code,
+    this.results,
+    this.message,
+  });
+
+  int code;
+  Results results;
+  String message;
+
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+    code: json["code"] == null ? null : json["code"],
+    results: json["results"] == null ? null : Results.fromJson(json["results"]),
+    message: json["message"] == null ? null : json["message"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "code": code == null ? null : code,
+    "results": results == null ? null : results.toJson(),
+    "message": message == null ? null : message,
+  };
+}
+
+class Results {
+  Results({
     this.uuid,
     this.username,
     this.name,
@@ -27,7 +51,7 @@ class UserModel {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+  factory Results.fromJson(Map<String, dynamic> json) => Results(
     uuid: json["uuid"] == null ? null : json["uuid"],
     username: json["username"] == null ? null : json["username"],
     name: json["name"] == null ? null : json["name"],

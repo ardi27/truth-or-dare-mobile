@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:truthordare/components/ViewPhoto.dart';
 import 'package:truthordare/constants/route_paths.dart' as routes;
 import 'package:truthordare/screen/dashboard.dart';
 
@@ -11,13 +12,15 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
 
     case routes.homeRoute:
-      return MaterialPageRoute(builder: (context)=>Dashboard());
+      return MaterialPageRoute(builder: (_)=>Dashboard());
     case routes.loginRoute:
-      return MaterialPageRoute(builder: (context)=>Login());
+      return MaterialPageRoute(builder: (_)=>Login());
     case routes.registerRoute:
-      return MaterialPageRoute(builder: (context)=>Register());
+      return MaterialPageRoute(builder: (_)=>Register());
     case routes.userTodRoute:
-      return MaterialPageRoute(builder: (context)=>UserTod(index: settings.arguments,));
+      return MaterialPageRoute(builder: (_)=>UserTod(index: settings.arguments,));
+    case routes.viewPhotoRoute:
+      return MaterialPageRoute(builder: (_)=>ViewFoto(foto: settings.arguments,));
     default:
       return MaterialPageRoute(
         builder: (context) => Scaffold(

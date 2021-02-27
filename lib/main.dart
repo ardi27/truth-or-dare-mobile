@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
     initializeDateFormatting();
     return ConnectivityAppWrapper(
       app: MaterialApp(
-        title: Dictionary.pikobarTestMasif,
+        title: "Truth or Dare",
         theme: ThemeData(
             appBarTheme: AppBarTheme(
               centerTitle: true,

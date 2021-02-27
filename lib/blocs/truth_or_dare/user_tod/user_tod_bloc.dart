@@ -66,8 +66,10 @@ class UserTodBloc extends Bloc<UserTodEvent, UserTodState> {
       int statusCode=await truthOrDareRepository.deleteUserTod(uuid: event.uuid,type: event.type);
       if(statusCode==200){
         if(event.type=='truth'){
+          yield TodDeleted();
           yield* _getUserTruthToState(GetUserTruth());
         }else{
+          yield TodDeleted();
           yield* _getUserDareToState(GetUserDare());
         }
       }

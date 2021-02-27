@@ -15,6 +15,13 @@ class Login extends StatelessWidget {
     return BlocProvider<LoginBloc>(
       create: (context) => sl<LoginBloc>(),
       child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.zero,
+          child: AppBar(
+            elevation: 0,
+            brightness: Brightness.dark,
+          ),
+        ),
         body: BuildForm(),
       ),
     );

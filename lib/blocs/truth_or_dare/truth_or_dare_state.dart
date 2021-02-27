@@ -8,7 +8,7 @@ abstract class TruthOrDareState extends Equatable {
 
 class TruthOrDareInitial extends TruthOrDareState {}
 class TodLoading extends TruthOrDareState{}
-class TodDeleted extends TruthOrDareState{}
+
 class TruthLoaded extends TruthOrDareState{
   final TruthModel truthModel;
   TruthLoaded({this.truthModel});

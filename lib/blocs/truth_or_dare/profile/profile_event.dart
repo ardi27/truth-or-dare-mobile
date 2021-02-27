@@ -7,3 +7,9 @@ abstract class ProfileEvent extends Equatable {
 }
 class LoadProfile extends ProfileEvent{
 }
+class UpdateProfile extends ProfileEvent{
+  final Map data;
+  UpdateProfile({this.data});
+  @override
+  List<Object> get props => [data];
+}

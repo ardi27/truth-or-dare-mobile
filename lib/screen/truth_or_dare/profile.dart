@@ -45,11 +45,11 @@ class Profile extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               } else if (state is ProfileLoaded) {
-                return buildBody(context, state);
+                return BuildProfileBody(state: state,);
+              }else if (State is ProfileFailure){
+                return Center(child: Text("Terjadi kesalahan internet"),);
               }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+              return Center(child: Text("Terjadi kesalahan internet"),);
             },
           ),
         ),
@@ -58,7 +58,23 @@ class Profile extends StatelessWidget {
     );
   }
 
-  SingleChildScrollView buildBody(BuildContext context, ProfileLoaded state) {
+
+}
+
+class BuildProfileBody extends StatefulWidget {
+  final ProfileLoaded state;
+  const BuildProfileBody({
+    Key key, this.state,
+  }) : super(key: key);
+
+  @override
+  _BuildProfileBodyState createState() => _BuildProfileBodyState();
+}
+
+class _BuildProfileBodyState extends State<BuildProfileBody> {
+
+  @override
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(10),
@@ -69,7 +85,7 @@ class Profile extends StatelessWidget {
                 onTap: () async {
                   showModalBottomSheet(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(10))
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(10))
                     ),
                     context: context,
                     builder:(_)=> Wrap(
@@ -77,6 +93,9 @@ class Profile extends StatelessWidget {
                         ListTile(
                           title: Text("Lihat foto"),
                           leading: Icon(Icons.remove_red_eye_rounded),
+                          onTap: (){
+                            Navigator.pushNamed(context, viewPhotoRoute,arguments: widget.state.user.results.profilePhotoUrl.toString());
+                          },
                         ),
                         Divider(),
                         ListTile(
@@ -84,11 +103,12 @@ class Profile extends StatelessWidget {
                           leading: Icon(Icons.camera_alt),
                           onTap: () async {
                             String path = await ImagePickerHelper.getImage(
-                                source: ImageSource.camera);
+                                source: ImageSource.gallery);
                             String url = await FirebaseStorageHelper.uploadToStorage(
                                 path: path,
-                                key: "${Strings.avatarPath}/${state.user.uuid}.png");
-                            print(url);
+                                key: "${Strings.avatarPath}/${widget.state.user.results.uuid}.png");
+                            BlocProvider.of<ProfileBloc>(context).add(UpdateProfile(data:{"profile_photo_url":url}));
+                            Navigator.pop(context);
                           },
                         )
                       ],
@@ -96,21 +116,20 @@ class Profile extends StatelessWidget {
                   );
 
                 },
-                child:CircleAvatar(
-                  child:Icon(Icons.person)
-                )
-                // Container(
-                //   width: 40,
-                //   height: 40,
-                //   decoration: BoxDecoration(
-                //       shape: BoxShape.circle,
-                //       image: DecorationImage(
-                //           image: NetworkImage(
-                //               "https://firebasestorage.googleapis.com/v0/b/jadwal-27e57.appspot.com/o/avatar%2F71b171ae-6b3b-43f6-82a9-21514aa889d8.png?alt=media&token=f5edffe7-79e1-4039-82a5-3e1bb48f61bc"))),
-                // ),
+                child:widget.state.user.results.profilePhotoUrl==null?CircleAvatar(
+                    child:Icon(Icons.person)
+                ):Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              widget.state.user.results.profilePhotoUrl.toString()))),
+                ),
               ),
-              title: Text(state.user.username),
-              subtitle: Text(state.user.email),
+              title: Text(widget.state.user.results.username),
+              subtitle: Text(widget.state.user.results.email),
               trailing: InkWell(
                 onTap: () {},
                 child: Icon(Icons.edit_outlined),
