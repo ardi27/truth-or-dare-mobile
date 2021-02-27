@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:truthordare/blocs/truth_or_dare/truth_or_dare_bloc.dart';
-import 'file:///C:/flutter/pikobar-rapidtest-checkin/lib/service_locator.dart';
+import 'package:truthordare/service_locator.dart';
 import 'package:truthordare/constants/Colors.dart';
 import 'package:truthordare/constants/Dictionary.dart';
 import 'package:truthordare/utilities/string_helper.dart';
