@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "587429686984",
+    "firebase_url": "https://jadwal-27e57.firebaseio.com",
+    "project_id": "jadwal-27e57",
+    "storage_bucket": "jadwal-27e57.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587429686984:android:9d46c3610d4457298d3ffd",
+        "android_client_info": {
+          "package_name": "com.example.truthordare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "587429686984-dr4d9rdi1t3ggqk7l31ug7aktoutjc6r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.truthordare",
+            "certificate_hash": "d7e997b3e116bdb1b11dcc3c2cdbc2652affff5e"
+          }
+        },
+        {
+          "client_id": "587429686984-a6832gc4vtcgok312bojfp0rcciees6o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGBsLKjT6jiCVcHBGXRWUpl0gRVmzS4dc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "587429686984-a6832gc4vtcgok312bojfp0rcciees6o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
