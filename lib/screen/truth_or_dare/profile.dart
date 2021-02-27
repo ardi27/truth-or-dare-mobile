@@ -154,8 +154,8 @@ class _BuildProfileBodyState extends State<BuildProfileBody> {
               title: Text("Logout"),
               onTap: () {
                 BlocProvider.of<AuthBloc>(context).add(UserLoggedOut());
-                Navigator.pushNamedAndRemoveUntil(
-                    context, homeRoute, (route) => route.isCurrent);
+                Navigator.pushReplacementNamed(
+                    context, homeRoute);
               },
             ),
           ],
