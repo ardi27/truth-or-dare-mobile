@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:truthordare/config/url.dart';
+import 'package:truthordare/constants/Lists.dart';
 import 'package:truthordare/model/DareModel.dart';
 import 'package:truthordare/model/TruthModel.dart';
 import 'package:truthordare/model/UserDareModel.dart';
@@ -10,10 +11,14 @@ import 'package:truthordare/screen/truth_or_dare/user_truth.dart';
 import 'package:truthordare/utilities/http.dart';
 
 class TruthOrDareRepository{
-  Future getRandomTruth() async{
+  Future getRandomTruth({int selectedLevel=-1}) async{
     try{
+      String levelSelected="";
+      if(selectedLevel> -1){
+        levelSelected=level[selectedLevel];
+      }
       Response response = await dio.get(
-        '$baseUrl/truth/random',
+        '$baseUrl/truth/random?level=$levelSelected',
       );
       final dynamic data = response.data;
       final TruthModel record = truthModelFromJson(jsonEncode(data));
@@ -22,10 +27,14 @@ class TruthOrDareRepository{
       throw Exception(e);
     }
   }
-  Future getRandomDare() async{
+  Future getRandomDare({int selectedLevel=-1}) async{
     try{
+      String levelSelected="";
+      if(selectedLevel> -1){
+        levelSelected=level[selectedLevel];
+      }
       Response response = await dio.get(
-        '$baseUrl/dare/random',
+        '$baseUrl/dare/random?level=$levelSelected',
       );
       final dynamic data = response.data;
       final DareModel record = dareModelFromJson(jsonEncode(data));

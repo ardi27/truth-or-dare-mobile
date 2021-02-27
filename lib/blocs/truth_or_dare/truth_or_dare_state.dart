@@ -11,14 +11,15 @@ class TodLoading extends TruthOrDareState{}
 
 class TruthLoaded extends TruthOrDareState{
   final TruthModel truthModel;
-  TruthLoaded({this.truthModel});
+  final int selectedLevel;
+  TruthLoaded({this.truthModel,this.selectedLevel=-1});
   @override
   List<Object> get props => [truthModel];
 }
 class DareLoaded extends TruthOrDareState{
   final DareModel dareModel;
-
-  DareLoaded({this.dareModel, });
+  final int selectedLevel;
+  DareLoaded({this.dareModel,this.selectedLevel=-1 });
   @override
   List<Object> get props => [dareModel];
 }

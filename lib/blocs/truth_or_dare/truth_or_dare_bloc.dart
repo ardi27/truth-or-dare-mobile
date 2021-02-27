@@ -26,21 +26,24 @@ class TruthOrDareBloc extends Bloc<TruthOrDareEvent, TruthOrDareState> {
     }
   }
 
-  Stream<TruthOrDareState> _getDareToState(TruthOrDareEvent event) async*{
+  Stream<TruthOrDareState> _getDareToState(GetDare event) async*{
     yield TodLoading();
     try{
-      DareModel dareModel=await truthRepository.getRandomDare();
-      yield DareLoaded(dareModel: dareModel);
+      int selectedLevel=event.selectedLevel;
+      DareModel dareModel=await truthRepository.getRandomDare(selectedLevel: selectedLevel);
+      yield DareLoaded(dareModel: dareModel,selectedLevel: selectedLevel);
     }catch(e){
       yield TodError(errMessage: e.toString()??"An error occured",isTruth: false);
     }
   }
 
-  Stream<TruthOrDareState> _getTruthToState(TruthOrDareEvent event) async*{
+  Stream<TruthOrDareState> _getTruthToState(GetTruth event) async*{
     yield TodLoading();
     try{
-      TruthModel truthModel=await truthRepository.getRandomTruth();
-      yield TruthLoaded(truthModel: truthModel);
+      int selectedLevel=event.selectedLevel;
+      TruthModel truthModel=await truthRepository.getRandomTruth(selectedLevel: selectedLevel);
+      print(truthModel);
+      yield TruthLoaded(truthModel: truthModel,selectedLevel: selectedLevel);
     }catch(e){
       yield TodError(errMessage: e.toString()??"An error occured",isTruth: true);
     }

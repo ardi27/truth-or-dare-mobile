@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:truthordare/blocs/truth_or_dare/truth_or_dare_bloc.dart';
+import 'package:truthordare/constants/Lists.dart';
 import 'package:truthordare/service_locator.dart';
 import 'package:truthordare/constants/Colors.dart';
 import 'package:truthordare/constants/Dictionary.dart';
@@ -11,7 +12,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<TruthOrDareBloc>(
-      create: (context) => sl<TruthOrDareBloc>()..add(GetDare()),
+      create: (context) => sl<TruthOrDareBloc>()..add(GetTruth()),
       child: Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -36,7 +37,10 @@ class Home extends StatelessWidget {
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 15.0),
-                      child: Text(state.errMessage.split(Dictionary.exeption).last,style: TextStyle(color: Colors.white),),
+                      child: Text(
+                        state.errMessage.split(Dictionary.exeption).last,
+                        style: TextStyle(color: Colors.white),
+                      ),
                     )
                   ],
                 ),
@@ -44,19 +48,20 @@ class Home extends StatelessWidget {
                     label: "Try again",
                     textColor: Colors.white,
                     onPressed: () {
-                      if(state.isTruth){
-                      BlocProvider.of<TruthOrDareBloc>(context).add(GetTruth());
-                      }else{
-                        BlocProvider.of<TruthOrDareBloc>(context).add(GetDare());
+                      if (state.isTruth) {
+                        BlocProvider.of<TruthOrDareBloc>(context)
+                            .add(GetTruth());
+                      } else {
+                        BlocProvider.of<TruthOrDareBloc>(context)
+                            .add(GetDare());
                       }
-
                     })));
           }
         },
         builder: (context, state) => SingleChildScrollView(
           child: Container(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   height: MediaQuery.of(context).size.height * 0.25,
@@ -67,7 +72,7 @@ class Home extends StatelessWidget {
                   overflow: Overflow.visible,
                   children: [
                     Container(
-                      height: 100,
+                      height: 90,
                       width: MediaQuery.of(context).size.width,
                     ),
                     Positioned(
@@ -77,71 +82,130 @@ class Home extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         child: Card(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)
-                          ),
+                              borderRadius: BorderRadius.circular(10)),
                           elevation: 2,
                           child: Container(
                             padding: EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                state is TodLoading
-                                    ? buildShimmer(context)
-                                    : Text(
-                                        state is DareLoaded
-                                            ? "${capitalize(state.dareModel.results.level)} Dare"
-                                            : state is TruthLoaded
-                                                ? "${capitalize(state.truthModel.results.level)} Truth"
-                                                : "",
+                            child: (state is TruthLoaded &&
+                                        state.truthModel.results == null) ||
+                                    (state is DareLoaded &&
+                                        state.dareModel.results == null)
+                                ? Column(
+                                  children: [
+                                    Icon(Icons.dangerous,size: 50,color: ColorBase.kPrimaryColor,),
+                                    Text(
+                                        "Tidak ada Truth or Dare untuk level yang dipilih",
                                         style: TextStyle(
                                             fontSize: 24,
                                             fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
                                       ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: ColorBase.blue,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  width: MediaQuery.of(context).size.width,
-                                  padding: EdgeInsets.all(20),
-                                  child: Column(children: [
-                                    state is TodLoading
-                                        ? buildShimmer(context)
-                                        : Text(
-                                            state is DareLoaded
-                                                ? state.dareModel.results.dare
-                                                : state is TruthLoaded
-                                                    ? state.truthModel.results
-                                                        .truth
-                                                    : "",
-                                            style: TextStyle(
-                                                fontSize: 24,
-                                                color: Colors.white),
-                                          ),
-
-                                  ]),
-                                ),
-                                SizedBox(height: 10,),
-                                Text("Dikirim oleh ${state is DareLoaded
-                                    ? state.dareModel.results.user.username
-                                    : state is TruthLoaded
-                                    ? state.truthModel.results
-                                    .user.username
-                                    : ""}",style: TextStyle(fontSize: 14,color: Colors.grey),textAlign: TextAlign.end,)
-                              ],
-                            ),
+                                  ],
+                                )
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      state is TodLoading
+                                          ? buildShimmer(context)
+                                          : Text(
+                                              state is DareLoaded
+                                                  ? "${capitalize(state.dareModel.results.level)} Dare"
+                                                  : state is TruthLoaded
+                                                      ? "${capitalize(state.truthModel.results.level)} Truth"
+                                                      : "",
+                                              style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: ColorBase.blue,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        padding: EdgeInsets.all(20),
+                                        child: Column(children: [
+                                          state is TodLoading
+                                              ? buildShimmer(context)
+                                              : Text(
+                                                  state is DareLoaded
+                                                      ? state.dareModel.results
+                                                          .dare
+                                                      : state is TruthLoaded
+                                                          ? state.truthModel
+                                                              .results.truth
+                                                          : "",
+                                                  style: TextStyle(
+                                                      fontSize: 24,
+                                                      color: Colors.white),
+                                                ),
+                                        ]),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        "Dikirim oleh ${state is DareLoaded ? state.dareModel.results.user.username : state is TruthLoaded ? state.truthModel.results.user.username : ""}",
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.grey),
+                                        textAlign: TextAlign.end,
+                                      )
+                                    ],
+                                  ),
                           ),
                         ),
                       ),
                     )
                   ],
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                buildButtonBar(context)
+                state is TruthLoaded || state is DareLoaded
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          spacing: 10,
+                          children: level.map((e) {
+                            return ChoiceChip(
+                              label: Text(capitalize(e)),
+                              selected: state is TruthLoaded
+                                  ? state.selectedLevel == level.indexOf(e)
+                                  : state is DareLoaded
+                                      ? state.selectedLevel == level.indexOf(e)
+                                      : false,
+                              onSelected: (value) {
+                                if (state is TruthLoaded) {
+                                  if (state.selectedLevel == level.indexOf(e)) {
+                                    BlocProvider.of<TruthOrDareBloc>(context)
+                                        .add(GetTruth(selectedLevel: -1));
+                                  } else {
+                                    BlocProvider.of<TruthOrDareBloc>(context)
+                                        .add(GetTruth(
+                                            selectedLevel: level.indexOf(e)));
+                                  }
+                                } else if (state is DareLoaded) {
+                                  if (state.selectedLevel == level.indexOf(e)) {
+                                    BlocProvider.of<TruthOrDareBloc>(context)
+                                        .add(GetDare(selectedLevel: -1));
+                                  } else {
+                                    BlocProvider.of<TruthOrDareBloc>(context)
+                                        .add(GetDare(
+                                            selectedLevel: level.indexOf(e)));
+                                  }
+                                }
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      )
+                    : SizedBox(
+                        height: 10,
+                      ),
+                buildButtonBar(context,state)
               ],
             ),
           ),
@@ -159,7 +223,7 @@ class Home extends StatelessWidget {
         highlightColor: Colors.grey[100]);
   }
 
-  Widget buildButtonBar(context) {
+  Widget buildButtonBar(context,state) {
     return Container(
       padding: EdgeInsets.all(10),
       child: Column(
@@ -172,13 +236,24 @@ class Home extends StatelessWidget {
               onPressed: () {
                 BlocProvider.of<TruthOrDareBloc>(context).add(GetTruth());
               },
-              child: Text(
-                "Truth",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.white),
-                textAlign: TextAlign.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  state is TruthLoaded?Row(
+                    children: [
+                      Icon(Icons.check_circle,color: Colors.white,),
+                      SizedBox(width: 10,),
+                    ],
+                  ):SizedBox(),
+                  Text(
+                    "Truth",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
           ),
@@ -193,13 +268,24 @@ class Home extends StatelessWidget {
               onPressed: () {
                 BlocProvider.of<TruthOrDareBloc>(context).add(GetDare());
               },
-              child: Text(
-                "Dare",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: ColorBase.kPrimaryColor),
-                textAlign: TextAlign.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  state is DareLoaded?Row(
+                    children: [
+                      Icon(Icons.check_circle,color: ColorBase.kPrimaryColor,),
+                      SizedBox(width: 10,),
+                    ],
+                  ):SizedBox(),
+                  Text(
+                    "Dare",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: ColorBase.kPrimaryColor),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
           ),

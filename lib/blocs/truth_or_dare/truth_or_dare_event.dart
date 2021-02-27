@@ -6,10 +6,18 @@ abstract class TruthOrDareEvent extends Equatable {
   List<Object> get props => [];
 }
 class GetTruth extends TruthOrDareEvent{
+  final int selectedLevel;
 
+  GetTruth({this.selectedLevel=-1});
+  @override
+  List<Object> get props => [selectedLevel];
 }
 class GetDare extends TruthOrDareEvent{
+  final int selectedLevel;
 
+  GetDare({this.selectedLevel=-1});
+  @override
+  List<Object> get props => [selectedLevel];
 }
 
 class SubmitTruthOrDare extends TruthOrDareEvent{
