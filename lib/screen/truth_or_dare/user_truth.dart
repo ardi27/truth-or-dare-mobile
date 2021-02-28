@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:truthordare/blocs/truth_or_dare/truth_or_dare_bloc.dart';
 import 'package:truthordare/blocs/truth_or_dare/user_tod/user_tod_bloc.dart';
-import 'package:truthordare/components/DialogTextOnly.dart';
-import 'package:truthordare/components/EmptyData.dart';
+import 'package:truthordare/components/DialogConfirm.dart';
+import 'package:truthordare/components/DialogRequestPermission.dart';
 import 'package:truthordare/constants/Colors.dart';
 import 'package:truthordare/constants/Dictionary.dart';
 import 'package:truthordare/service_locator.dart';
@@ -35,7 +35,7 @@ class UserTruth extends StatelessWidget {
                   ],
                 ),
               ));
-            }else if(state is TodDeleted){
+            } else if (state is TodDeleted) {
               return Scaffold.of(context).showSnackBar(SnackBar(
                 backgroundColor: Theme.of(context).primaryColor,
                 content: Row(
@@ -61,8 +61,10 @@ class UserTruth extends StatelessWidget {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            }else if(state is UserTruthLoaded){
-              return BuildListTruth(state: state,);
+            } else if (state is UserTruthLoaded) {
+              return BuildListTruth(
+                state: state,
+              );
             }
             return Center(
               child: CircularProgressIndicator(),
@@ -76,6 +78,7 @@ class UserTruth extends StatelessWidget {
 
 class BuildListTruth extends StatefulWidget {
   final UserTruthLoaded state;
+
   const BuildListTruth({
     this.state,
     Key key,
@@ -87,53 +90,86 @@ class BuildListTruth extends StatefulWidget {
 
 class _BuildListTruthState extends State<BuildListTruth> {
   ScrollController _scrollController;
+
   @override
   void initState() {
     super.initState();
-    _scrollController=ScrollController();
+    _scrollController = ScrollController();
   }
+
   @override
   void dispose() {
     super.dispose();
     _scrollController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    return widget.state.userTruth.isEmpty?Center(child: Text("Truth kamu kosong"),):ListView.builder(
-      controller: _scrollController..addListener(() {
-        final maxScroll = _scrollController.position.maxScrollExtent;
-        final currentScroll = _scrollController.position.pixels;
-        if(!widget.state.hasReachedMax){
-          if(maxScroll==currentScroll){
-            BlocProvider.of<UserTodBloc>(context).add(GetMoreUserTruth(currentPage: widget.state.currentPage));
-          }
-        }
-      }),
-      itemCount: widget.state.hasReachedMax
-          ? widget.state.userTruth.length
-          : widget.state.userTruth.length + 1,
-      shrinkWrap: true,
-      itemBuilder: (context,index)=>index >=
-          widget.state.userTruth.length
-          ? Center(
-        child: CircularProgressIndicator(),
-      )
-          :Column(
-        children: [
-          ListTile(
-            leading: Icon(Icons.directions_run),
-            title: Text(widget.state.userTruth[index].truth),
-            subtitle: Text(widget.state.userTruth[index].level),
-            trailing: InkWell(
-              child: Icon(Icons.delete_outline,color: ColorBase.darkRed,),
-              onTap: (){
-                BlocProvider.of<UserTodBloc>(context).add(DeleteUserTod(type: "truth",uuid:widget.state.userTruth[index].uuid));
-              },
-            ),
-          ),
-          Divider()
-        ],
-      ),
-    );
+    return widget.state.userTruth.isEmpty
+        ? Center(
+            child: Text("Truth kamu kosong"),
+          )
+        : ListView.builder(
+            controller: _scrollController
+              ..addListener(() {
+                final maxScroll = _scrollController.position.maxScrollExtent;
+                final currentScroll = _scrollController.position.pixels;
+                if (!widget.state.hasReachedMax) {
+                  if (maxScroll == currentScroll) {
+                    BlocProvider.of<UserTodBloc>(context).add(GetMoreUserTruth(
+                        currentPage: widget.state.currentPage));
+                  }
+                }
+              }),
+            itemCount: widget.state.hasReachedMax
+                ? widget.state.userTruth.length
+                : widget.state.userTruth.length + 1,
+            shrinkWrap: true,
+            itemBuilder: (context, index) => index >=
+                    widget.state.userTruth.length
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Container(
+                    padding: EdgeInsets.only(top: 10),
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.settings_voice_outlined),
+                          title: Text(widget.state.userTruth[index].truth),
+                          subtitle: Text(widget.state.userTruth[index].level),
+                          trailing: InkWell(
+                            child: Icon(
+                              Icons.delete_outline,
+                              color: ColorBase.darkRed,
+                            ),
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => DialogConfirm(
+                                  title: "Konfirmasi hapus",
+                                  buttonText: "Ya",
+                                  description:
+                                      "Apakah kamu yakin ingin menghapus?",
+                                  onOkPressed: () {
+                                    BlocProvider.of<UserTodBloc>(context).add(
+                                        DeleteUserTod(
+                                            type: "truth",
+                                            uuid: widget
+                                                .state.userTruth[index].uuid));
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Divider(
+                          thickness: 1,
+                        )
+                      ],
+                    ),
+                  ),
+          );
   }
 }
