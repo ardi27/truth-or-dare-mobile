@@ -61,7 +61,7 @@ class UserDare extends StatelessWidget {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state is UserDareloaded) {
+            } else if (state is UserDareLoaded) {
               return BuildUserDare(
                 state: state,
               );
@@ -77,7 +77,7 @@ class UserDare extends StatelessWidget {
 }
 
 class BuildUserDare extends StatefulWidget {
-  final UserDareloaded state;
+  final UserDareLoaded state;
 
   const BuildUserDare({
     Key key,
@@ -130,28 +130,32 @@ class _BuildUserDareState extends State<BuildUserDare> {
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.directions_run),
-                        title: Text(widget.state.userDare[index].dare),
-                        subtitle: Text(widget.state.userDare[index].level),
-                        trailing: InkWell(
-                          child: Icon(
-                            Icons.delete_outline,
-                            color: ColorBase.darkRed,
+                : Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.only(top: 10),
+                  child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.directions_run),
+                          title: Text(widget.state.userDare[index].dare),
+                          subtitle: Text(widget.state.userDare[index].level),
+                          trailing: InkWell(
+                            child: Icon(
+                              Icons.delete_outline,
+                              color: ColorBase.darkRed,
+                            ),
+                            onTap: () {
+                              BlocProvider.of<UserTodBloc>(context).add(
+                                  DeleteUserTod(
+                                      type: "dare",
+                                      uuid: widget.state.userDare[index].uuid));
+                            },
                           ),
-                          onTap: () {
-                            BlocProvider.of<UserTodBloc>(context).add(
-                                DeleteUserTod(
-                                    type: "dare",
-                                    uuid: widget.state.userDare[index].uuid));
-                          },
                         ),
-                      ),
-                      Divider()
-                    ],
-                  ),
+                        Divider(thickness: 1,)
+                      ],
+                    ),
+                ),
           );
   }
 }
