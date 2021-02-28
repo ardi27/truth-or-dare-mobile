@@ -62,7 +62,7 @@ class _DashboardState extends State<Dashboard>
         currentIndex: _currentIndex, // this will be set when a new tab is tapped
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.dashboard_outlined),
             label: 'Truth or Dare',
           ),
           BottomNavigationBarItem(
