@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:truthordare/blocs/truth_or_dare/truth_or_dare_bloc.dart';
 import 'package:truthordare/blocs/truth_or_dare/user_tod/user_tod_bloc.dart';
+import 'package:truthordare/components/DialogConfirm.dart';
+import 'package:truthordare/components/DialogRequestPermission.dart';
 import 'package:truthordare/constants/Colors.dart';
 import 'package:truthordare/constants/Dictionary.dart';
 import 'package:truthordare/service_locator.dart';
@@ -129,31 +131,45 @@ class _BuildListTruthState extends State<BuildListTruth> {
                     child: CircularProgressIndicator(),
                   )
                 : Container(
-                  padding: EdgeInsets.only(top: 10),
-                  color: Colors.white,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.settings_voice_outlined),
-                        title: Text(widget.state.userTruth[index].truth),
-                        subtitle: Text(widget.state.userTruth[index].level),
-                        trailing: InkWell(
-                          child: Icon(
-                            Icons.delete_outline,
-                            color: ColorBase.darkRed,
+                    padding: EdgeInsets.only(top: 10),
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.settings_voice_outlined),
+                          title: Text(widget.state.userTruth[index].truth),
+                          subtitle: Text(widget.state.userTruth[index].level),
+                          trailing: InkWell(
+                            child: Icon(
+                              Icons.delete_outline,
+                              color: ColorBase.darkRed,
+                            ),
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => DialogConfirm(
+                                  title: "Konfirmasi hapus",
+                                  buttonText: "Ya",
+                                  description:
+                                      "Apakah kamu yakin ingin menghapus?",
+                                  onOkPressed: () {
+                                    BlocProvider.of<UserTodBloc>(context).add(
+                                        DeleteUserTod(
+                                            type: "truth",
+                                            uuid: widget
+                                                .state.userTruth[index].uuid));
+                                  },
+                                ),
+                              );
+                            },
                           ),
-                          onTap: () {
-                            BlocProvider.of<UserTodBloc>(context).add(
-                                DeleteUserTod(
-                                    type: "truth",
-                                    uuid: widget.state.userTruth[index].uuid));
-                          },
                         ),
-                      ),
-                      Divider(thickness: 1,)
-                    ],
+                        Divider(
+                          thickness: 1,
+                        )
+                      ],
+                    ),
                   ),
-                ),
           );
   }
 }

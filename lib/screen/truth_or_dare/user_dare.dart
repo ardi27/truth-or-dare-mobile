@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:truthordare/blocs/truth_or_dare/truth_or_dare_bloc.dart';
 
 import 'package:truthordare/blocs/truth_or_dare/user_tod/user_tod_bloc.dart';
+import 'package:truthordare/components/DialogConfirm.dart';
 import 'package:truthordare/components/EmptyData.dart';
 import 'package:truthordare/constants/Colors.dart';
 import 'package:truthordare/constants/Dictionary.dart';
@@ -145,10 +146,21 @@ class _BuildUserDareState extends State<BuildUserDare> {
                               color: ColorBase.darkRed,
                             ),
                             onTap: () {
-                              BlocProvider.of<UserTodBloc>(context).add(
-                                  DeleteUserTod(
-                                      type: "dare",
-                                      uuid: widget.state.userDare[index].uuid));
+                              showDialog(
+                                context: context,
+                                builder: (context) => DialogConfirm(
+                                  title: "Konfirmasi hapus",
+                                  buttonText: "Ya",
+                                  description:
+                                  "Apakah kamu yakin ingin menghapus?",
+                                  onOkPressed: () {
+                                    BlocProvider.of<UserTodBloc>(context).add(
+                                        DeleteUserTod(
+                                            type: "dare",
+                                            uuid: widget.state.userDare[index].uuid));
+                                  },
+                                ),
+                              );
                             },
                           ),
                         ),
