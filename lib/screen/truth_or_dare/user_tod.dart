@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:truthordare/constants/Colors.dart';
+import 'package:truthordare/constants/route_paths.dart';
 import 'package:truthordare/screen/truth_or_dare/user_dare.dart';
 import 'package:truthordare/screen/truth_or_dare/user_truth.dart';
 
@@ -14,6 +15,9 @@ class UserTod extends StatelessWidget {
       length: 2,
       initialIndex: index,
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(child: Icon(Icons.add),onPressed: (){
+          Navigator.pushNamed(context, submitTodRoute);
+        },),
         appBar: AppBar(
           centerTitle: true,
           title: Text("List"),

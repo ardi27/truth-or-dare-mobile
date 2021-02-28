@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:truthordare/utilities/SharedPreferences.dart';
 import 'package:truthordare/utilities/local_storage_helper.dart';
 import 'package:truthordare/utilities/secure_store.dart';
 
@@ -22,6 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield AuthAuthenticated(token: event.token);
     }else if(event is UserLoggedOut){
       await SecureStore().deleteAll();
+      await Preferences.getDataBool("level");
       await LocalStorageHelper.clearStorage(storageName: StorageName.USER);
       yield AuthUnauthenticated();
     }

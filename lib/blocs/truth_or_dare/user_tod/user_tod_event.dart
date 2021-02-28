@@ -6,7 +6,14 @@ abstract class UserTodEvent extends Equatable {
   List<Object> get props => [];
 }
 class GetUserTruth extends UserTodEvent{}
-class GetMoreUserTruth extends UserTodEvent{}
+class GetMoreUserTruth extends UserTodEvent{
+  final int currentPage;
+
+  GetMoreUserTruth({this.currentPage});
+  @override
+  List<Object> get props => [currentPage];
+
+}
 class DeleteUserTod extends UserTodEvent{
   final String type;
   final String uuid;
@@ -16,4 +23,9 @@ class DeleteUserTod extends UserTodEvent{
   List<Object> get props => [type,uuid];
 }
 class GetUserDare extends UserTodEvent{}
-class GetMoreUserDare extends UserTodEvent{}
+class GetMoreUserDare extends UserTodEvent{
+  final int currentPage;
+  GetMoreUserDare({this.currentPage});
+  @override
+  List<Object> get props => [currentPage];
+}

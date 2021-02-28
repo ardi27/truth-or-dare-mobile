@@ -6,15 +6,18 @@ import 'package:truthordare/screen/dashboard.dart';
 
 import 'package:truthordare/screen/login_screen/login.dart';
 import 'package:truthordare/screen/login_screen/register.dart';
+import 'package:truthordare/screen/truth_or_dare/submit_tod.dart';
 import 'package:truthordare/screen/truth_or_dare/user_tod.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
 
     case routes.homeRoute:
-      return MaterialPageRoute(builder: (_)=>Dashboard());
+      return MaterialPageRoute(builder: (_)=>Dashboard(initialPage: settings.arguments??0,));
     case routes.loginRoute:
       return MaterialPageRoute(builder: (_)=>Login());
+    case routes.submitTodRoute:
+      return MaterialPageRoute(builder: (_)=>SubmitTod());
     case routes.registerRoute:
       return MaterialPageRoute(builder: (_)=>Register());
     case routes.userTodRoute:

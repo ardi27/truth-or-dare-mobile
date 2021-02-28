@@ -86,12 +86,39 @@ class BuildListTruth extends StatefulWidget {
 }
 
 class _BuildListTruthState extends State<BuildListTruth> {
+  ScrollController _scrollController;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController=ScrollController();
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.state.userTruth.length,
+    return widget.state.userTruth.isEmpty?Center(child: Text("Truth kamu kosong"),):ListView.builder(
+      controller: _scrollController..addListener(() {
+        final maxScroll = _scrollController.position.maxScrollExtent;
+        final currentScroll = _scrollController.position.pixels;
+        if(!widget.state.hasReachedMax){
+          if(maxScroll==currentScroll){
+            BlocProvider.of<UserTodBloc>(context).add(GetMoreUserTruth(currentPage: widget.state.currentPage));
+          }
+        }
+      }),
+      itemCount: widget.state.hasReachedMax
+          ? widget.state.userTruth.length
+          : widget.state.userTruth.length + 1,
       shrinkWrap: true,
-      itemBuilder: (context,index)=>Column(
+      itemBuilder: (context,index)=>index >=
+          widget.state.userTruth.length
+          ? Center(
+        child: CircularProgressIndicator(),
+      )
+          :Column(
         children: [
           ListTile(
             leading: Icon(Icons.directions_run),

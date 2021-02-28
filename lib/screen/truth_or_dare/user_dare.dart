@@ -35,8 +35,7 @@ class UserDare extends StatelessWidget {
                   ],
                 ),
               ));
-            }
-            else if(state is TodDeleted){
+            } else if (state is TodDeleted) {
               return Scaffold.of(context).showSnackBar(SnackBar(
                 backgroundColor: Theme.of(context).primaryColor,
                 content: Row(
@@ -62,8 +61,10 @@ class UserDare extends StatelessWidget {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            }else if(state is UserDareloaded){
-              return BuildUserDare(state: state,);
+            } else if (state is UserDareloaded) {
+              return BuildUserDare(
+                state: state,
+              );
             }
             return Center(
               child: CircularProgressIndicator(),
@@ -77,8 +78,10 @@ class UserDare extends StatelessWidget {
 
 class BuildUserDare extends StatefulWidget {
   final UserDareloaded state;
+
   const BuildUserDare({
-    Key key, this.state,
+    Key key,
+    this.state,
   }) : super(key: key);
 
   @override
@@ -86,27 +89,69 @@ class BuildUserDare extends StatefulWidget {
 }
 
 class _BuildUserDareState extends State<BuildUserDare> {
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.state.userDare.length,
-      shrinkWrap: true,
-      itemBuilder: (context,index)=>Column(
-        children: [
-          ListTile(
-            leading: Icon(Icons.directions_run),
-            title: Text(widget.state.userDare[index].dare),
-            subtitle: Text(widget.state.userDare[index].level),
-            trailing: InkWell(
-              child: Icon(Icons.delete_outline,color: ColorBase.darkRed,),
-              onTap: (){
-                BlocProvider.of<UserTodBloc>(context).add(DeleteUserTod(type: "dare",uuid:widget.state.userDare[index].uuid));
-              },
-            ),
-          ),
-          Divider()
-        ],
-      ),
-    );
+    return widget.state.userDare.isEmpty
+        ? Center(
+            child: Text("Dare kamu kosong"),
+          )
+        : ListView.builder(
+            controller: _scrollController
+              ..addListener(() {
+                final maxScroll = _scrollController.position.maxScrollExtent;
+                final currentScroll = _scrollController.position.pixels;
+                if (!widget.state.hasReachedMax) {
+                  if (maxScroll == currentScroll) {
+                    BlocProvider.of<UserTodBloc>(context).add(
+                        GetMoreUserDare(currentPage: widget.state.currentPage));
+                  }
+                }
+              }),
+            itemCount: widget.state.hasReachedMax
+                ? widget.state.userDare.length
+                : widget.state.userDare.length + 1,
+            shrinkWrap: true,
+            itemBuilder: (context, index) => index >=
+                    widget.state.userDare.length
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.directions_run),
+                        title: Text(widget.state.userDare[index].dare),
+                        subtitle: Text(widget.state.userDare[index].level),
+                        trailing: InkWell(
+                          child: Icon(
+                            Icons.delete_outline,
+                            color: ColorBase.darkRed,
+                          ),
+                          onTap: () {
+                            BlocProvider.of<UserTodBloc>(context).add(
+                                DeleteUserTod(
+                                    type: "dare",
+                                    uuid: widget.state.userDare[index].uuid));
+                          },
+                        ),
+                      ),
+                      Divider()
+                    ],
+                  ),
+          );
   }
 }
