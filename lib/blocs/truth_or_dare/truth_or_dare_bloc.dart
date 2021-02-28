@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -6,6 +7,7 @@ import 'package:truthordare/model/DareModel.dart';
 import 'package:truthordare/model/TruthModel.dart';
 import 'package:truthordare/repositories/dare_repository.dart';
 import 'package:truthordare/repositories/truth_repository.dart';
+import 'package:truthordare/utilities/SharedPreferences.dart';
 
 part 'truth_or_dare_event.dart';
 part 'truth_or_dare_state.dart';
@@ -31,6 +33,9 @@ class TruthOrDareBloc extends Bloc<TruthOrDareEvent, TruthOrDareState> {
     try{
       int selectedLevel=event.selectedLevel;
       DareModel dareModel=await truthRepository.getRandomDare(selectedLevel: selectedLevel);
+      await Preferences.setDataInt(
+          "level", selectedLevel);
+      log(selectedLevel.toString(),name: "level");
       yield DareLoaded(dareModel: dareModel,selectedLevel: selectedLevel);
     }catch(e){
       yield TodError(errMessage: e.toString()??"An error occured",isTruth: false);
@@ -42,6 +47,8 @@ class TruthOrDareBloc extends Bloc<TruthOrDareEvent, TruthOrDareState> {
     try{
       int selectedLevel=event.selectedLevel;
       TruthModel truthModel=await truthRepository.getRandomTruth(selectedLevel: selectedLevel);
+      await Preferences.setDataInt(
+          "level", selectedLevel);
       print(truthModel);
       yield TruthLoaded(truthModel: truthModel,selectedLevel: selectedLevel);
     }catch(e){
