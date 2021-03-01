@@ -90,11 +90,12 @@ class BuildListTruth extends StatefulWidget {
 
 class _BuildListTruthState extends State<BuildListTruth> {
   ScrollController _scrollController;
-
+  UserTodBloc _userTodBloc;
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    _userTodBloc=BlocProvider.of<UserTodBloc>(context);
   }
 
   @override
@@ -153,7 +154,8 @@ class _BuildListTruthState extends State<BuildListTruth> {
                                   description:
                                       "Apakah kamu yakin ingin menghapus?",
                                   onOkPressed: () {
-                                    BlocProvider.of<UserTodBloc>(context).add(
+                                    Navigator.pop(context);
+                                   _userTodBloc.add(
                                         DeleteUserTod(
                                             type: "truth",
                                             uuid: widget
