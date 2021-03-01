@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:truthordare/blocs/truth_or_dare/truth_or_dare_bloc.dart';
@@ -30,7 +32,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<TruthOrDareBloc>(
-      create: (context) => sl<TruthOrDareBloc>()..add(GetTruth()),
+      create: (context) => sl<TruthOrDareBloc>()..add(GetTruth(selectedLevel: selectedLevel??-1)),
       child: Scaffold(
           appBar: AppBar(
             elevation: 0,
@@ -68,10 +70,10 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       if (state.isTruth) {
                         BlocProvider.of<TruthOrDareBloc>(context)
-                            .add(GetTruth());
+                            .add(GetTruth(selectedLevel: selectedLevel));
                       } else {
                         BlocProvider.of<TruthOrDareBloc>(context)
-                            .add(GetDare());
+                            .add(GetDare(selectedLevel: selectedLevel));
                       }
                     })));
           }
@@ -97,31 +99,31 @@ class _HomeState extends State<Home> {
                         elevation: 2,
                         child: Container(
                           padding: EdgeInsets.all(10),
-                          child: (state is TruthLoaded &&
-                              state.truthModel.results == null) ||
-                              (state is DareLoaded &&
-                                  state.dareModel.results == null)
-                              ? Column(
-                            children: [
-                              Icon(
-                                Icons.dangerous,
-                                size: 50,
-                                color: ColorBase.kPrimaryColor,
-                              ),
-                              Text(
-                                "Tidak ada Truth or Dare untuk level yang dipilih",
-                                style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          )
-                              : Column(
+                          child: Column(
                             crossAxisAlignment:
                             CrossAxisAlignment.start,
                             children: [
-                              Column(
+                              (state is TruthLoaded &&
+                                  state.truthModel.results == null) ||
+                                  (state is DareLoaded &&
+                                      state.dareModel.results == null)
+                                  ? Column(
+                                children: [
+                                  Icon(
+                                    Icons.dangerous,
+                                    size: 50,
+                                    color: ColorBase.kPrimaryColor,
+                                  ),
+                                  Text(
+                                    "Tidak ada Truth or Dare untuk level yang dipilih",
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              )
+                                  : Column(
                                 crossAxisAlignment:
                                 CrossAxisAlignment.start,
                                 children: [
@@ -214,6 +216,7 @@ class _HomeState extends State<Home> {
                                                     .indexOf(e)));
                                             selectedLevel =
                                                 level.indexOf(e);
+                                            print("Here");
                                           }
                                         } else if (state
                                         is DareLoaded) {
@@ -235,8 +238,6 @@ class _HomeState extends State<Home> {
                                             selectedLevel =
                                                 level.indexOf(e);
                                           }
-                                          await Preferences.setDataInt(
-                                              "level", selectedLevel);
                                           setState(() {});
                                         }
                                       },
@@ -283,7 +284,7 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 BlocProvider.of<TruthOrDareBloc>(context).add(GetTruth(
                     selectedLevel:
-                        state is TruthLoaded ? state.selectedLevel : -1));
+                        selectedLevel));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -324,7 +325,7 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 BlocProvider.of<TruthOrDareBloc>(context).add(GetDare(
                     selectedLevel:
-                        state is DareLoaded ? state.selectedLevel : -1));
+                        selectedLevel));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

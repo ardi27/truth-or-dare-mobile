@@ -15,9 +15,13 @@ class UserTod extends StatelessWidget {
       length: 2,
       initialIndex: index,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(child: Icon(Icons.add),onPressed: (){
-          Navigator.pushNamed(context, submitTodRoute);
-        },),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.pushNamed(context, submitTodRoute);
+          },
+          backgroundColor: ColorBase.kPrimaryColor,
+        ),
         appBar: AppBar(
           centerTitle: true,
           title: Text("List"),

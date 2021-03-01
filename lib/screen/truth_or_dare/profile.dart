@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:truthordare/blocs/truth_or_dare/authentication/auth_bloc.dart';
 import 'package:truthordare/blocs/truth_or_dare/profile/profile_bloc.dart';
+import 'package:truthordare/components/DialogConfirm.dart';
 import 'package:truthordare/constants/Strings.dart';
 import 'package:truthordare/constants/route_paths.dart';
 import 'package:truthordare/service_locator.dart';
@@ -34,7 +35,7 @@ class Profile extends StatelessWidget {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, homeRoute);
                   Navigator.pushNamed(context, loginRoute);
-                }
+                } else if (state is AuthLoading) {}
               },
             ),
           ],
@@ -45,11 +46,17 @@ class Profile extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               } else if (state is ProfileLoaded) {
-                return BuildProfileBody(state: state,);
-              }else if (State is ProfileFailure){
-                return Center(child: Text("Terjadi kesalahan internet"),);
+                return BuildProfileBody(
+                  state: state,
+                );
+              } else if (State is ProfileFailure) {
+                return Center(
+                  child: Text("Terjadi kesalahan internet"),
+                );
               }
-              return Center(child: Text("Terjadi kesalahan internet"),);
+              return Center(
+                child: Text("Terjadi kesalahan internet"),
+              );
             },
           ),
         ),
@@ -57,14 +64,14 @@ class Profile extends StatelessWidget {
       ),
     );
   }
-
-
 }
 
 class BuildProfileBody extends StatefulWidget {
   final ProfileLoaded state;
+
   const BuildProfileBody({
-    Key key, this.state,
+    Key key,
+    this.state,
   }) : super(key: key);
 
   @override
@@ -72,7 +79,6 @@ class BuildProfileBody extends StatefulWidget {
 }
 
 class _BuildProfileBodyState extends State<BuildProfileBody> {
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -85,16 +91,19 @@ class _BuildProfileBodyState extends State<BuildProfileBody> {
                 onTap: () async {
                   showModalBottomSheet(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(10))
-                    ),
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(10))),
                     context: context,
-                    builder:(_)=> Wrap(
+                    builder: (_) => Wrap(
                       children: [
                         ListTile(
                           title: Text("Lihat foto"),
                           leading: Icon(Icons.remove_red_eye_rounded),
-                          onTap: (){
-                            Navigator.pushNamed(context, viewPhotoRoute,arguments: widget.state.user.results.profilePhotoUrl.toString());
+                          onTap: () {
+                            Navigator.pushNamed(context, viewPhotoRoute,
+                                arguments: widget
+                                    .state.user.results.profilePhotoUrl
+                                    .toString());
                           },
                         ),
                         Divider(),
@@ -104,29 +113,33 @@ class _BuildProfileBodyState extends State<BuildProfileBody> {
                           onTap: () async {
                             String path = await ImagePickerHelper.getImage(
                                 source: ImageSource.gallery);
-                            String url = await FirebaseStorageHelper.uploadToStorage(
-                                path: path,
-                                key: "${Strings.avatarPath}/${widget.state.user.results.uuid}.png");
-                            BlocProvider.of<ProfileBloc>(context).add(UpdateProfile(data:{"profile_photo_url":url}));
+                            String url =
+                                await FirebaseStorageHelper.uploadToStorage(
+                                    path: path,
+                                    key:
+                                        "${Strings.avatarPath}/${widget.state.user.results.uuid}.png");
+                            BlocProvider.of<ProfileBloc>(context).add(
+                                UpdateProfile(
+                                    data: {"profile_photo_url": url}));
                             Navigator.pop(context);
                           },
                         )
                       ],
                     ),
                   );
-
                 },
-                child:widget.state.user.results.profilePhotoUrl==null?CircleAvatar(
-                    child:Icon(Icons.person)
-                ):Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              widget.state.user.results.profilePhotoUrl.toString()))),
-                ),
+                child: widget.state.user.results.profilePhotoUrl == null
+                    ? CircleAvatar(child: Icon(Icons.person))
+                    : Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: NetworkImage(widget
+                                    .state.user.results.profilePhotoUrl
+                                    .toString()))),
+                      ),
               ),
               title: Text(widget.state.user.results.username),
               subtitle: Text(widget.state.user.results.email),
@@ -139,21 +152,32 @@ class _BuildProfileBodyState extends State<BuildProfileBody> {
               leading: Icon(Icons.question_answer_outlined),
               title: Text("Submitted Truth"),
               onTap: () {
-                Navigator.pushNamed(context, userTodRoute,arguments: 0);
+                Navigator.pushNamed(context, userTodRoute, arguments: 0);
               },
             ),
             ListTile(
               leading: Icon(Icons.directions_run),
               title: Text("Submitted Dare"),
               onTap: () {
-                Navigator.pushNamed(context, userTodRoute,arguments: 1);
+                Navigator.pushNamed(context, userTodRoute, arguments: 1);
               },
             ),
             ListTile(
               leading: Icon(Icons.logout),
               title: Text("Logout"),
               onTap: () {
-                BlocProvider.of<AuthBloc>(context).add(UserLoggedOut());
+                showDialog(
+                    context: context,
+                    builder: (context) => DialogConfirm(
+                        title: "Konfirmasi Logout",
+                        description: "Apakah kamu yakin ingin logout?",
+                        buttonText: "Iya",
+                        onOkPressed: () {
+                          Navigator.pop(context);
+                          BlocProvider.of<AuthBloc>(context)
+                              .add(UserLoggedOut());
+                          Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => route.isCurrent);
+                        }));
               },
             ),
           ],

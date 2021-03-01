@@ -1,4 +1,4 @@
-# rapid_test
+# Truth or Dare
 
 A new Flutter project.
 
