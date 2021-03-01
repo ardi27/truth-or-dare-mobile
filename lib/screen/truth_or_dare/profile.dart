@@ -34,6 +34,7 @@ class Profile extends StatelessWidget {
                   Navigator.pop(context);
                   Navigator.pushNamed(context, homeRoute);
                   Navigator.pushNamed(context, loginRoute);
+                }else if(state is AuthLoading){
                 }
               },
             ),
