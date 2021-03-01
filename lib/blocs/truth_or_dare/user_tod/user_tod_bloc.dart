@@ -19,10 +19,10 @@ class UserTodBloc extends Bloc<UserTodEvent, UserTodState> {
     UserTodEvent event,
   ) async* {
     if(event is GetUserDare){
-       userDare=[];
+
       yield* _getUserDareToState(event);
     }else if(event is GetUserTruth){
-      userTruth=[];
+
       yield* _getUserTruthToState(event);
     }else if(event is DeleteUserTod){
       yield* _deleteUserTodToState(event);
@@ -35,7 +35,7 @@ class UserTodBloc extends Bloc<UserTodEvent, UserTodState> {
   Stream<UserTodState> _getUserTruthToState(GetUserTruth event)async* {
     yield UserTodLoading();
     try{
-
+      userTruth=[];
       int currentPage=1;
       bool hasReachedMax=false;
       UserTruthModel userTruthModel=await truthOrDareRepository.getUserTod(type: "truth",page:currentPage);
@@ -53,6 +53,7 @@ class UserTodBloc extends Bloc<UserTodEvent, UserTodState> {
   Stream<UserTodState> _getUserDareToState(GetUserDare event)async* {
     yield UserTodLoading();
     try{
+      userDare=[];
       int currentPage=1;
       bool hasReachedMax=false;
       UserDareModel userDareModel=await truthOrDareRepository.getUserTod(type: "dare",page:currentPage);
@@ -69,6 +70,7 @@ class UserTodBloc extends Bloc<UserTodEvent, UserTodState> {
   }
   Stream<UserTodState> _deleteUserTodToState(DeleteUserTod event)async*{
     try{
+      yield UserTodLoading();
       int statusCode=await truthOrDareRepository.deleteUserTod(uuid: event.uuid,type: event.type);
       if(statusCode==200){
         if(event.type=='truth'){

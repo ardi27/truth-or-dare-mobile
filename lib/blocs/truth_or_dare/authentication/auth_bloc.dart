@@ -22,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }else if (event is UserLoggedIn){
       yield AuthAuthenticated(token: event.token);
     }else if(event is UserLoggedOut){
+      yield AuthLoading();
       await SecureStore().deleteAll();
       await Preferences.getDataBool("level");
       await LocalStorageHelper.clearStorage(storageName: StorageName.USER);
