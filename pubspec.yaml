@@ -47,6 +47,7 @@ dependencies:
   get_it: ^5.0.6
   shimmer: ^1.1.2
   firebase_core: ^0.7.0
+  firebase_analytics: ^7.0.1
   firebase_auth: ^0.20.1
   google_sign_in: ^4.5.9
   localstorage: ^3.0.6+9

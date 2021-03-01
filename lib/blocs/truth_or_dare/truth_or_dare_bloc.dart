@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:truthordare/model/DareModel.dart';
 import 'package:truthordare/model/TruthModel.dart';
 import 'package:truthordare/repositories/dare_repository.dart';
@@ -29,8 +30,14 @@ class TruthOrDareBloc extends Bloc<TruthOrDareEvent, TruthOrDareState> {
   Stream<TruthOrDareState> _getDareToState(GetDare event) async*{
     yield TodLoading();
     try{
+      DateTime now=DateTime.now();
       int selectedLevel=event.selectedLevel;
       DareModel dareModel=await truthRepository.getRandomDare(selectedLevel: selectedLevel);
+      FirebaseAnalytics().logEvent(name: "dare_clicked",parameters: {
+        'dare':dareModel.results.dare,
+        'level':dareModel.results.level,
+        'clickedAt':now.toString(),
+      });
       yield DareLoaded(dareModel: dareModel,selectedLevel: selectedLevel);
     }catch(e){
       yield TodError(errMessage: e.toString()??"An error occured",isTruth: false);
@@ -40,8 +47,14 @@ class TruthOrDareBloc extends Bloc<TruthOrDareEvent, TruthOrDareState> {
   Stream<TruthOrDareState> _getTruthToState(GetTruth event) async*{
     yield TodLoading();
     try{
+      DateTime now=DateTime.now();
       int selectedLevel=event.selectedLevel;
       TruthModel truthModel=await truthRepository.getRandomTruth(selectedLevel: selectedLevel);
+      FirebaseAnalytics().logEvent(name: "truth_clicked",parameters: {
+        'truth':truthModel.results.truth,
+        'level':truthModel.results.level,
+        'clickedAt':now.toString()
+      });
       print(truthModel);
       yield TruthLoaded(truthModel: truthModel,selectedLevel: selectedLevel);
     }catch(e){
